@@ -23,6 +23,7 @@
 #include "tinyusb/usb.h"
 #endif
 #include "lib/printf.h"
+#include "hal/pios.h"
 
 
 int main(void)
@@ -32,6 +33,7 @@ int main(void)
     usb_init();
 #endif
     cli_init();
+    init_pios();
 
     for(;;)
     {

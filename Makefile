@@ -65,6 +65,7 @@ SRC += $(SRC_FOLDER)hal/hw_divider.c
 SRC += $(SRC_FOLDER)hal/startup.c
 SRC += $(SRC_FOLDER)hal/irq.c
 
+SRC += $(SRC_FOLDER)hal/pios.c
 
 INCDIRS +=$(SRC_FOLDER)
 INCDIRS +=$(BIN_FOLDER)
