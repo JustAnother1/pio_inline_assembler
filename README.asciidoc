@@ -1,0 +1,112 @@
+test pio
+========
+
+The test_pio is a firmware for the https://www.raspberrypi.com/products/raspberry-pi-pico/[RaspberryPi Pico board] that allows to experiment with the PIOs.
+
+:toc:
+
+== features
+
+ - USB CDCD(serial port) command line interface
+
+== building and starting
+
+The firmware can be build using make. The generated Files will be placed in the bin folder. For details try
+
++make help+
+
+for this to work you (obviously) need to have make installed.
+Depending on the target you are building for you might need to have additionaltools installed:
+
+- To build for ARM Cortex-M Targets you need https://launchpad.net/gcc-arm-embedded[GCC ARM Embedded]
+- to flash and program you need https://openocd.org/[OpenOCD]
+- to create an *.uf2 file you need https://github.com/JustAnother1/elf2uf2/releases[elf2uf2]
+
+== pinout
+
+=== pico
+The pico has 40 pins (1..40) Numbered counter clock wise starting at the USB connector.
+
+----
+                  +-----+
+           +-------+ USB +---------+
+   GPIO 0 -+- 1    +-----+     40 -+- Vbus
+   GPIO 1 -+- 2                39 -+- Vsys
+      Gnd -+- 3                38 -+- Gnd
+   GPIO 2 -+- 4                37 -+- 3V3_EN
+   GPIO 3 -+- 5                36 -+- 3V3(Out)
+   GPIO 4 -+- 6                35 -+- ADC-Vref
+   GPIO 5 -+- 7                34 -+- GPIO 28
+      Gnd -+- 8                33 -+- Gnd
+   GPIO 6 -+- 9                32 -+- GPIO 27
+   GPIO 7 -+- 10               31 -+- GPIO 26
+   GPIO 8 -+- 11               30 -+- Run = /Reset
+   GPIO 9 -+- 12               29 -+- GPIO 22
+      Gnd -+- 13               28 -+- Gnd
+  GPIO 10 -+- 14               27 -+- GPIO 21
+  GPIO 11 -+- 15               26 -+- GPIO 20
+  GPIO 12 -+- 16               25 -+- GPIO 19
+  GPIO 13 -+- 17               24 -+- GPIO 18
+      Gnd -+- 18               23 -+- Gnd
+  GPIO 14 -+- 19               22 -+- GPIO 17
+  GPIO 15 -+- 20     Debug     21 -+- GPIO 16
+           +-----------------------+
+                   S  G  S
+                   W  n  W
+                   C  d  D
+                   L     I
+                   K     O
+----
+
+Pin 21: (GPIO 16) Debug Uart TX (UART0)
+
+Pin 22: (GPIO 17) Debug Uart RX (UART0)
+
+
+== Acknowledgments
+
+This project would not be possible without many other open source projects.
+This project relies on gcc for ARM Cortex-M, gdb, lcov, doxygen, make and many more.
+For all this help we want to thank the Linux and open source community.
+
+
+== license
+----
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License version 2
+as published by the Free Software Foundation.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, see <http://www.gnu.org/licenses/>
+----
+
+tinyusb is under he following license
+
+----
+The MIT License (MIT)
+
+Copyright (c) 2018, hathach (tinyusb.org)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+----

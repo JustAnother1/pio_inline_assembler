@@ -1,0 +1,32 @@
+{
+    "project_type": "hal only",
+    "timer": {"time_ms": {
+        "mode": "count overflows",
+        "peripheral": "systick",
+        "frequency": "1 kHz"
+    }},
+    "chip_name": "RP2040",
+    "vendor_name": "Raspberry Pi",
+    "UART": {"debug_uart": {
+        "peripheral": "UART0",
+        "stop_bits": "1",
+        "baud_rate": "115200",
+        "pad_tx": "16",
+        "pad_rx": "17",
+        "parity": "None",
+        "hardware_flow_control": "no",
+        "IRQ_priority": "0",
+        "IRQ": "20",
+        "receive_buffer_size": "100",
+        "bits_per_packet": "8",
+        "send_buffer_size": "500"
+    }},
+    "file_comment": "minimal",
+    "clock": {"cpu": {
+        "source": "hse",
+        "FBDIV": "100",
+        "POSTDIV1": "6",
+        "POSTDIV2": "1",
+        "frequency": "12 MHz"
+    }}
+}
