@@ -26,16 +26,19 @@ again:
  PIO inline ASM */
 };
 
-void load_square_wave(void)
+bool load_square_wave(const uint32_t loop)
 {
     uint32_t i;
+    (void) loop;
     RESETS->RESET = RESETS->RESET & ~ RESETS_RESET_IO_BANK0_MASK; // take IO_BANK0 out of Reset
     // load program into PIO
     for(i = 0; i < (sizeof(squarewave_program_instructions)/sizeof(squarewave_program_instructions[0])); i++)
     {
         ((PIO_type*)PIO0)->INSTR_MEM[i] = squarewave_program_instructions[i];
     }
-    // device cpu clock by 10 ( 200MHz -> 20 MHz
+    // device cpu clock by 10 ( 200MHz -> 20 MHz)
+    // PIO code uses 4 cycles per cycle of output signal
+    // 200MHz / 4 = 50 MHz /2.5 = 20 MHz
     PIO0->SM0_CLKDIV = (uint32_t) (2.5f * (1 << PIO_SM0_CLKDIV_INT_OFFSET));
     // GPIO0
     PIO0->SM0_PINCTRL = (1 << PIO_SM0_PINCTRL_SET_COUNT_OFFSET)
@@ -45,4 +48,5 @@ void load_square_wave(void)
     IO_BANK0->GPIO0_CTRL = 6; // 6 == PIO0; 7 == PIO1
 
     PIO0->CTRL = 1; // switch on State machine 0
+    return true;
 }

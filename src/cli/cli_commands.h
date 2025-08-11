@@ -17,6 +17,7 @@
 
 #include "cli_cfg.h"
 #include "pio_commands.h"
+#include "squarewave.h"
 
 
 cmd_typ commands[] = {
@@ -24,6 +25,8 @@ cmd_typ commands[] = {
         //12345678901    123456789012345678901234567890123456789012345678901234567890
         {"help",        "list all available commands", cmd_help},
         {"r",           "list all SFR", cmd_pio_registers},
+        {"square",      "output 20MHz on GPIO0", load_square_wave},
+        {"stop",        "stop all PIO activity", cmd_pio_stop},
 };
 
 

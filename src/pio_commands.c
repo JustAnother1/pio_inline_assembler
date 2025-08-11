@@ -117,3 +117,11 @@ bool cmd_pio_registers(const uint32_t loop)
     }
     return false;
 }
+
+bool cmd_pio_stop(const uint32_t loop)
+{
+    (void) loop;
+    PIO0->CTRL = 0;
+    PIO1->CTRL = 0;
+    return true;
+}
