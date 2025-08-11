@@ -9,6 +9,7 @@ CC = arm-none-eabi-gcc
 LD = arm-none-eabi-gcc
 SIZE = size
 MKDIR_P = mkdir -p
+INLPIO = tools/compile_inline_pio_asm.py
 
 # configuration
 # =============
@@ -30,6 +31,9 @@ SRC += $(SRC_FOLDER)main.c
 SRC += $(SRC_FOLDER)cli/cli.c
 
 SRC += $(SRC_FOLDER)pio_commands.c
+
+SRC += $(SRC_FOLDER)squarewave.binpio.c
+
 ifeq ($(CLI), uart)
 # CLI on UART
 SRC += $(SRC_FOLDER)hal/debug_uart.c
@@ -159,6 +163,11 @@ $(BIN_FOLDER)src/cli/cli.o: src/cli/cli.c $(BIN_FOLDER)version.h
 	@$(MKDIR_P) $(@D)
 	$(CC) -c $(CFLAGS) $(DDEFS) $(INCDIR) $< -o $@
 
+%.binpio.c : %.pio.c
+	@echo ""
+	@echo "=== compiling $@"
+	$(INLPIO) $<
+
 $(BIN_FOLDER)%.o: %.c
 	@echo ""
 	@echo "=== compiling $@"
@@ -166,7 +175,7 @@ $(BIN_FOLDER)%.o: %.c
 	$(CC) -c $(CFLAGS) $(DDEFS) $(INCDIR) $< -o $@
 
 clean:
-	rm -rf $(BIN_FOLDER)*
+	rm -rf $(BIN_FOLDER)* */*.binpio.c */*.inl.pio
 
 .PHONY: clean flash all
 

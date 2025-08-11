@@ -24,6 +24,8 @@
 #endif
 #include "lib/printf.h"
 #include "hal/pios.h"
+#include "hal/hw/PIO0.h"
+#include "squarewave.h"
 
 
 int main(void)
@@ -34,6 +36,7 @@ int main(void)
 #endif
     cli_init();
     init_pios();
+    load_square_wave();
 
     for(;;)
     {
