@@ -1,2 +1,4 @@
 /.settings/
 /bin/
+/src/*.binpio.c
+/src/*.inl.pio
