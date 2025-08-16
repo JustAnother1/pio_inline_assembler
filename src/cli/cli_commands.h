@@ -18,6 +18,7 @@
 #include "cli_cfg.h"
 #include "pio_commands.h"
 #include "squarewave.h"
+#include "cyw43_spi_bus.h"
 
 
 cmd_typ commands[] = {
@@ -27,6 +28,7 @@ cmd_typ commands[] = {
         {"r",           "list all SFR", cmd_pio_registers},
         {"square",      "output 20MHz on GPIO0", load_square_wave},
         {"stop",        "stop all PIO activity", cmd_pio_stop},
+        {"spi",         "load cyw43 spi bus", load_cyw43_spi_bus},
 };
 
 

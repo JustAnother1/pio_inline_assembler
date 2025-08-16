@@ -29,10 +29,9 @@ endif
 SRC += $(SRC_FOLDER)main.c
 # CLI
 SRC += $(SRC_FOLDER)cli/cli.c
-
 SRC += $(SRC_FOLDER)pio_commands.c
-
 SRC += $(SRC_FOLDER)squarewave.binpio.c
+SRC += $(SRC_FOLDER)cyw43_spi_bus.binpio.c
 
 ifeq ($(CLI), uart)
 # CLI on UART
