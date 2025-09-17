@@ -8,13 +8,13 @@
 # The pio assembly end before a line that contains "PIO inline ASM".
 # There can be one or more PIO assembly blocks in the file.
 # It creates a pio file for each block of PIO assembly.
-# Each block can have a name. The name is given in the same line as and after the "PIO inline ASM".
+# Each block can have a name. The name is given in the same line after the "PIO inline ASM".
 # The name will be put into the name of the pio file like so: *.name.inl.pio
 # If no name is given to the blocks then the blocks will be numbered. 
 # The first pio file will not have a number, 
 # the second will have the number 1 attached (*.1.inl.pio),...
 # It then copiles the pio file into hex codes.
-# It then creates a *.c file that has the code from the script parameter file 
+# It then creates a *.c file that has the code from the input file (script parameter) 
 # but replaced the pio asm code by the hex codes.
 # The input file must end with ".pio.c".
 # The output file will end with ".binpio.c".
