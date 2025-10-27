@@ -995,7 +995,7 @@ static void dcd_rp2040_irq(void)
 
         handled |= USB_INTS_BUS_RESET_BITS;
 
-        USBCTRL_REGS->ADDR_ENDP = 0;
+        USBCTRL_REGS->ADDR_ENDP[0] = 0;
         reset_non_control_endpoints();
         dcd_event_bus_reset(0, TUSB_SPEED_FULL, true);
         USBCTRL_REGS_CLR->SIE_STATUS = USB_SIE_STATUS_BUS_RESET_BITS;
@@ -1172,6 +1172,6 @@ void dcd_edpt0_status_complete(uint8_t rhport, tusb_control_request_t const * re
         request->bmRequestType_bit.type == TUSB_REQ_TYPE_STANDARD &&
         request->bRequest == TUSB_REQ_SET_ADDRESS )
     {
-        USBCTRL_REGS->ADDR_ENDP = (uint8_t) request->wValue;
+        USBCTRL_REGS->ADDR_ENDP[0] = (uint8_t) request->wValue;
     }
 }

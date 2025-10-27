@@ -10,16 +10,17 @@
     "UART": {"debug_uart": {
         "peripheral": "UART0",
         "stop_bits": "1",
+        "enable_define": "FEAT_DEBUG_UART",
         "baud_rate": "115200",
-        "pad_tx": "16",
-        "pad_rx": "17",
         "parity": "None",
-        "hardware_flow_control": "no",
         "IRQ_priority": "0",
         "IRQ": "20",
         "receive_buffer_size": "100",
-        "bits_per_packet": "8",
-        "send_buffer_size": "500"
+        "send_buffer_size": "500",
+        "pad_tx": "16",
+        "pad_rx": "17",
+        "hardware_flow_control": "no",
+        "bits_per_packet": "8"
     }},
     "file_comment": "minimal",
     "clock": {"cpu": {
@@ -28,5 +29,6 @@
         "POSTDIV1": "6",
         "POSTDIV2": "1",
         "frequency": "12 MHz"
-    }}
+    }},
+    "path_prefix": "src/"
 }

@@ -4,14 +4,13 @@
 
 #include <hal/debug_uart.h>
 #include <hal/hw/CLOCKS.h>
-#include <hal/hw/PLL_SYS.h>
+#include <hal/hw/PLL.h>
 #include <hal/hw/PPB.h>
 #include <hal/hw/PSM.h>
 #include <hal/hw/RESETS.h>
 #include <hal/hw/VREG_AND_CHIP_RESET.h>
 #include <hal/hw/XIP_SSI.h>
 #include <hal/hw/XOSC.h>
-#include <hal/hw/PLL_USB.h>
 #include <hal/irq.h>
 
 volatile uint32_t ms_since_boot;
@@ -40,20 +39,20 @@ __attribute__((__noreturn__)) void Reset_Handler(void) __attribute__ ((__noretur
 
 extern int main(void);
 
-extern uint32_t __bss_start;
-extern uint32_t __bss_end;
+extern uint32_t linker_bss_start;
+extern uint32_t linker_bss_end;
 
-extern uint32_t __data_start;
-extern uint32_t __data_end;
-extern uint32_t __data_in_flash;
+extern uint32_t linker_data_start;
+extern uint32_t linker_data_end;
+extern uint32_t linker_data_in_flash;
 
-extern uint32_t __code_start;
-extern uint32_t __code_end;
-extern uint32_t __code_in_flash;
+extern uint32_t linker_code_start;
+extern uint32_t linker_code_end;
+extern uint32_t linker_code_in_flash;
 
-extern uint32_t __ro_data_start;
-extern uint32_t __ro_data_end;
-extern uint32_t __ro_data_in_flash;
+extern uint32_t linker_ro_data_start;
+extern uint32_t linker_ro_data_end;
+extern uint32_t linker_ro_data_in_flash;
 
 extern const VECTOR_FUNCTION_Type __VECTOR_TABLE_RAM[64] __attribute__((aligned(0x100u)));
 
@@ -82,23 +81,23 @@ __attribute__((__noreturn__)) void error_state(void)
 __attribute__((__noreturn__)) void Reset_Handler(void)
 {
     /// !!! DO NOT CALL ANY FUNCTIONS BETWEEN THIS LINE
-    uint32_t *code_start_p =  &__code_start;
-    uint32_t *code_end_p = &__code_end;
-    uint32_t *code_src_p = &__code_in_flash;
+    uint32_t *code_start_p =  &linker_code_start;
+    uint32_t *code_end_p = &linker_code_end;
+    uint32_t *code_src_p = &linker_code_in_flash;
 
-    uint32_t *rodata_start_p =  &__ro_data_start;
-    uint32_t *rodata_end_p = &__ro_data_end;
-    uint32_t *rodata_src_p = &__ro_data_in_flash;
+    uint32_t *rodata_start_p =  &linker_ro_data_start;
+    uint32_t *rodata_end_p = &linker_ro_data_end;
+    uint32_t *rodata_src_p = &linker_ro_data_in_flash;
 
-    uint32_t *bss_start_p =  &__bss_start;
-    uint32_t *bss_end_p = &__bss_end;
+    uint32_t *bss_start_p =  &linker_bss_start;
+    uint32_t *bss_end_p = &linker_bss_end;
 
-    uint32_t *data_start_p =  &__data_start;
-    uint32_t *data_end_p = &__data_end;
-    uint32_t *data_src_p = &__data_in_flash;
+    uint32_t *data_start_p =  &linker_data_start;
+    uint32_t *data_end_p = &linker_data_end;
+    uint32_t *data_src_p = &linker_data_in_flash;
 
-    // __asm volatile ("LDR     R0,=0x20041ffc \n"
-    // "MOV     SP, R0"); // set stack pointer
+    __asm volatile ("LDR     R0,=0x20041ffc \n"
+                    "MOV     SP, R0"); // set stack pointer
 
     PSM->FRCE_ON = 0x1ffff; // power on all needed blocks
     // wait for powered on blocks to become available
@@ -114,6 +113,7 @@ __attribute__((__noreturn__)) void Reset_Handler(void)
         ;
     }
         // initialize clock cpu
+
     // for clock being stable at 200 MHz
     VREG_AND_CHIP_RESET->VREG = 0xc1; // enabled + 1.15V
     // configure external oscillator clock (12000000 Hz)
@@ -125,10 +125,11 @@ __attribute__((__noreturn__)) void Reset_Handler(void)
     {
         ;
     }
+
     // switch clk_ref and clk_sys to XOSC
     CLOCKS->CLK_REF_CTRL = (CLOCKS_CLK_REF_CTRL_SRC_XOSC_CLKSRC << CLOCKS_CLK_REF_CTRL_SRC_OFFSET);
-    CLOCKS->WAKE_EN0 = 0xffffffff; // all clocks enabled
-    CLOCKS->WAKE_EN1 = 0x7fff; // all clocks enabled
+    CLOCKS->WAKE_EN[0] = 0xffffffff; // all clocks enabled
+    CLOCKS->WAKE_EN[1] = 0x7fff; // all clocks enabled
     // wait for switch to happen
     while (4 != CLOCKS->CLK_REF_SELECTED)
     {
@@ -143,13 +144,13 @@ __attribute__((__noreturn__)) void Reset_Handler(void)
     // turn on main power and VCO
     PLL_SYS->PWR = 0;
     // wait for VCO clock to lock
-    while (0 == (PLL_SYS_CS_LOCK_MASK & PLL_SYS->CS))
+    while (0 == (PLL_CS_LOCK_MASK & PLL_SYS->CS))
     {
         ;
     }
 
     // set up post dividers and turn them on (6, 1)
-    PLL_SYS->PRIM = (6 << PLL_SYS_PRIM_POSTDIV1_OFFSET) |(1 << PLL_SYS_PRIM_POSTDIV2_OFFSET);
+    PLL_SYS->PRIM = (6 << PLL_PRIM_POSTDIV1_OFFSET) |(1 << PLL_PRIM_POSTDIV2_OFFSET);
     // switch sys aux to PLL
     CLOCKS->CLK_SYS_CTRL = 0;
     // switch sys mux to aux
@@ -171,6 +172,8 @@ __attribute__((__noreturn__)) void Reset_Handler(void)
     // wait for the clock generator to restart (2 clock cycles of clock source)
     __asm volatile ("nop");
     __asm volatile ("nop");
+
+
     // copy read only data from flash to RAM
     while(rodata_start_p < rodata_end_p)
     {
@@ -210,6 +213,7 @@ __attribute__((__noreturn__)) void Reset_Handler(void)
     /// !!! AND THIS LINE  !!!
 
     // initialize timer time_ms
+
     ms_since_boot = 0;
     PPB->SYST_CSR = (1 << PPB_SYST_CSR_ENABLE_OFFSET) | (1 << PPB_SYST_CSR_TICKINT_OFFSET) | (1 << PPB_SYST_CSR_CLKSOURCE_OFFSET);     // SysTick on
     PPB->SYST_RVR = 200000;  // reload value = CPU clock in Hz / 1000
@@ -242,7 +246,8 @@ __attribute__((__noreturn__)) void Reset_Handler(void)
 #ifdef FEAT_DEBUG_UART
     // initialize UART debug_uart
     debug_uart_init(115200);
-#endif
+#endif // FEAT_DEBUG_UART
+
     for(;;)
     {
         main();

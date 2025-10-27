@@ -3,6 +3,7 @@
     "file_comment": "minimal",
     "vendor_name": "Raspberry Pi",
     "chip_name": "RP2040",
+    "path_prefix" : "src/",
     "clock": {
         "cpu": {
             "source" : "hse",
@@ -33,6 +34,7 @@
             "peripheral" : "UART0",
             "IRQ" : "20",
             "IRQ_priority" : "0",
+            "enable_define": "FEAT_DEBUG_UART",
         },
     },
 }
